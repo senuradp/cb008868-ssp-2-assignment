@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\User\UseController
+use App\Http\Controllers\User\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,14 +24,19 @@ Auth::routes();
 
 Route::prefix('user')->name('user.')->group(function(){
 
-    Route::middleware(['guest'])->group(function () {});
-    // Route::middleware(['auth'])->group(function () {
-    //     Route::get('/', [UserController::class, 'index'])->name('index');
-    //     Route::get('/profile', [UserController::class, 'profile'])->name('profile');
-    //     Route::get('/edit', [UserController::class, 'edit'])->name('edit');
-    //     Route::put('/update', [UserController::class, 'update'])->name('update');
-    //     Route::get('/logout', [UserController::class, 'logout'])->name('logout');
-    // });
-    Route::middleware(['auth'])->group(function () {});
+    // :web is the name of the guard
+    // Prevent users from accessing the register/login page if they are already logged in
+
+    Route::middleware(['guest:web','PreventBackHistory'])->group(function () {
+        Route::view('/login','dashboard.user.login')->name('login');
+        Route::view('/register','dashboard.user.register')->name('register');
+        Route::post('/register-user', [UserController::class, 'registerUser'])->name('register-user');
+        Route::post('/login-user', [UserController::class, 'loginUser'])->name('login-user');
+    });
+
+    Route::middleware(['auth:web','PreventBackHistory'])->group(function () {
+        Route::view('/home','dashboard.user.home')->name('home');
+        Route::get('/logout', [UserController::class, 'logoutUser'])->name('logout');
+    });
 
 });
