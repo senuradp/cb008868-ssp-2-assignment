@@ -22,4 +22,16 @@ Auth::routes();
 
 // Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Route::prefix('user')->name('user.')->group(function(){});
+Route::prefix('user')->name('user.')->group(function(){
+
+    Route::middleware(['guest'])->group(function () {});
+    // Route::middleware(['auth'])->group(function () {
+    //     Route::get('/', [UserController::class, 'index'])->name('index');
+    //     Route::get('/profile', [UserController::class, 'profile'])->name('profile');
+    //     Route::get('/edit', [UserController::class, 'edit'])->name('edit');
+    //     Route::put('/update', [UserController::class, 'update'])->name('update');
+    //     Route::get('/logout', [UserController::class, 'logout'])->name('logout');
+    // });
+    Route::middleware(['auth'])->group(function () {});
+
+});
